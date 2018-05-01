@@ -9,21 +9,18 @@ use OpenMooc\Users\Services\usersService;
 
 class InstructorController extends Controller
 {
-    private $service;
+    private  $service;
     private $coursesStudentsService;
-    private $userService;
-
     public function __construct()
     {
         $this->service = new coursesService();
         $this->coursesStudentsService = new coursesStudentsService();
-        $this->userService = new usersService();
     }
 
     public function index($id)
     {
-        $studentsCount = $this->coursesStudentsService->countMyStudents($id);
-        $coursesCount = $this->service->countMyCourses($id);
+        $studentsCount =  $this->coursesStudentsService->countMyStudents($id);
+        $coursesCount =  $this->service->countMyCourses($id);
 
         return view('instructor.dashboard')
             ->with('coursesCount', $coursesCount)
@@ -33,15 +30,15 @@ class InstructorController extends Controller
     public function myCourses($id)
     {
         $courses = $this->service->getCoursesByInstructor($id);
-        return view('course.courses')->with('coursesList', $courses);
+            return view('course.courses')->with('coursesList', $courses);
     }
 
     public function createCourse()
     {
 
-
+        $userService = new usersService();
         $categoryService = new coursesCategoriesService();
-        $instructor = $this->userService->getUsersByGroup([1, 3]);
+        $instructor = $userService->getUsersByGroup([1,3]);
         $categories = $categoryService->getCategories();
 
         return view('course.addcourse')
@@ -51,26 +48,26 @@ class InstructorController extends Controller
 
     public function updateCourse($course_id)
     {
-
+        $userService = new usersService();
         $categoryService = new coursesCategoriesService();
-        $instructor = $this->userService->getUsersByGroup([1, 3]);
+        $instructor = $userService->getUsersByGroup([1,3]);
         $categories = $categoryService->getCategories();
         $course = $this->service->getCourse($course_id);
         return view('course.edit')->with('instructors', $instructor)
-            ->with('categories', $categories)
+            ->with('categories',$categories)
             ->with('course', $course);
     }
 
-    public function updateCourseProcess(Request $request, $id)
+    public function updateCourseProcess(Request $request ,$id)
     {
-        if ($this->service->updateCourseProcess($request, $id))
+         if ($this->service->updateCourseProcess($request,$id))
             return 'course updated';
         return $this->service->errors();
     }
 
     public function deleteCourse($id)
     {
-        return ($this->service->deleteCourse($id) == true) ? 'course deleted' : $this->service->errors();
+        return ($this->service->deleteCourse($id)==true)? 'course deleted': $this->service->errors();
     }
 
     public function showStudentsInCourse($course_id)
@@ -88,7 +85,6 @@ class InstructorController extends Controller
     {
         return $this->coursesStudentsService->unApprove($id);
     }
-
     public function deleteSubscription($id)
     {
         return $this->coursesStudentsService->deleteSubscription($id);
@@ -97,8 +93,8 @@ class InstructorController extends Controller
     public function myStudents($instructor_id)
     {
 
-        $students = $this->coursesStudentsService->getAllInstructorStudents($instructor_id);
-        return view('instructor.allStudents')->with('students', $students);
+       $students = $this->coursesStudentsService->getAllInstructorStudents($instructor_id);
+            return view('instructor.allStudents')->with('students', $students);
     }
 
 

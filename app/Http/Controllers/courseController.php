@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use OpenMooc\Courses\Services\coursesCategoriesService;
 use OpenMooc\Courses\Services\coursesLessonService;
+use OpenMooc\Courses\Services\coursesStudentsService;
 use OpenMooc\Users\Services\usersService;
 use Validator;
 use OpenMooc\Courses\Services\coursesService;
@@ -23,7 +24,7 @@ class courseController extends Controller
     {
         $usersService = new usersService();
         $categoryService = new coursesCategoriesService();
-        $instructor = $usersService->getUsersByGroup([1, 3]);
+        $instructor = $usersService->getUsersByGroup([1,3]);
         $categories = $categoryService->getCategories();
         return view('course.addcourse')
             ->with('instructors', $instructor)
@@ -32,10 +33,19 @@ class courseController extends Controller
 
     public function processAddCourse(Request $request)
     {
-        if ($this->coursesService->addCourse($request))
-            return 'course Added';
+        if ($this->coursesService->addCourse($request->all())) {
+            $message = "Courses Successfully added ";
+            return view('dashboard.instructor.success')
+                ->with('message', $message);
+        } else {
+            // return back with Error
+            $error = $this->coursesService->errors();
 
-        return $this->coursesService->errors();
+            return redirect()
+                ->back()
+                ->withErrors($error);
+
+        }
     }
 
 
@@ -47,10 +57,10 @@ class courseController extends Controller
         // get categories data
         $categories = DB::table('courses_categories')->get();
         // get course data
-        $course = $this->coursesService->getCourse($id);
+         $course =$this->coursesService->getCourse($id);
         // return to view
         return view('dashboard.instructor.editcoursebyinst')
-            ->with('categories', $categories)
+            ->with('categories',$categories)
             ->with('course', $course);
 
     }
@@ -58,41 +68,52 @@ class courseController extends Controller
     // update course process
     public function updateCourseProcess(Request $request)
     {
-        if ($this->coursesService->updateCourseProcess($request)) {
+        if ($this->coursesService->updateCourseProcess($request->all())){
 
 
             $message = "Courses Successfully Edit ";
             return view('dashboard.instructor.success')
-                ->with('message', $message);
-        } else {
-            $error = $this->coursesService->errors();
+                ->with('message',$message);
+           }
+           else{
+                $error = $this->coursesService->errors();
 
-            return redirect()
-                ->back()
-                ->withErrors($error);
+                return redirect()
+                    ->back()
+                    ->withErrors($error);
 
-        }
+    }
     }
 
 
     // delelet coures By id
     public function deleteCourse($id)
     {
+        // chk if any students make supc  showStudentsInCourse
+        $student = new coursesStudentsService();
+        if($student->showStudentsInCourse($id)){
+            $message = 'cant delete course because some student subscribe ';
+            return view('dashboard.instructor.oopsmessage')
+                ->with('message',$message);
+        }
         //chk data
         $data = $this->coursesService->getCourse($id);
 
 
         // if data true call del method
-        if ($data) {
-            $del = $this->coursesService->deleteCourse($id);
+        if($data){
+            $del =$this->coursesService->deleteCourse($id);
             // if del Course
-            if ($del) {
-                $message = 'Courses Successfully Deleted ';
+            if($del){
+                $message='Courses Successfully Deleted ';
                 return view('dashboard.instructor.success')
-                    ->with('message', $message);
+                    ->with('message',$message);
             }
             //if not found data
-            return view('dashboard.instructor.oopsmessage');
+
+        $message = 'Course not found';
+        return view('dashboard.instructor.oopsmessage')
+            ->with('message',$message);
         }
 
 
@@ -112,56 +133,51 @@ class courseController extends Controller
 
     public function getCoursesByInstructor($id)
     {
-        $courses = $this->coursesService->getCoursesByInstructor($id);
-        if (count($courses) > 0)
+         $courses = $this->coursesService->getCoursesByInstructor($id);
+        if(count($courses)>0)
             return $courses;
         return 'no course for this instructor';
     }
 
 
-    public function getCoursesByCategory($category_id = 0)
-    {
-        $courses = $this->coursesService->getCoursesByCategory($category_id);
-        if (count($courses) > 0) {
+    public function getCoursesByCategory($category_id=0)
+    {$courses = $this->coursesService->getCoursesByCategory($category_id);
+        if(count($courses)>0){
             return view('course')
-                ->with('coursesList', $courses);
-        }
+                ->with('coursesList', $courses);}
         return 'there is no course matched';
     }
 
 
     public function getCoursesByStudentId($studentId)
 
-    {
-        $courses = $this->coursesService->getCoursesByStudentId($studentId);
-        if (count($courses) > 0) {
-            return view('course')
-                ->with('coursesList', $courses);
-        }
-        return 'there is no course matched';
+        {$courses = $this->coursesService->getCoursesByStudentId($studentId);
+            if(count($courses)>0){
+                return view('course')
+                    ->with('coursesList', $courses);}
+            return 'there is no course matched';
     }
 
 
-    public function getCoursesByActiveStatus($status = 1)
+    public function getCoursesByActiveStatus($status=1)
     {
         $courses = $this->coursesService->getCoursesByActiveStatus($status);
-        if (count($courses) > 0) {
+        if(count($courses)>0){
             return view('course')
-                ->with('coursesList', $courses);
-        }
+                ->with('coursesList', $courses);}
         return 'there is no course matched';
 
     }
+
 
 
     public function searchCourses($keywords)
     {
         $courses = $this->coursesService->searchCourses($keywords);
 
-        if (count($courses) > 0) {
+        if(count($courses)>0){
             return view('course')
-                ->with('coursesList', $courses);
-        }
+                ->with('coursesList', $courses);}
         return 'there is no course matched';
     }
 

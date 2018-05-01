@@ -8,6 +8,25 @@
 | routes are loaded by the RouteServiceProvider within a group which
 | contains the "web" middleware group. Now create something great!
 */
+
+/*
+  create by M.sayed 1:10 1/5/2018
+    fornt view Routing
+ */
+Route::get('/','frontController@index');
+Route::get('category/{id}','frontController@courseCategory');
+Route::get('about',function (){
+    return view('front.about');
+});
+
+Route::get('join/{id}','frontController@joinCoures');
+Route::get('course/{id}','frontController@getCoures');
+Route::get('instrutor/{id}','frontController@instructorDtalis');
+/*
+ _________________end front view ____________
+ */
+
+// user and  admin Routing
 Route::prefix('admin')->group(function () {
     // Home
     Route::get('/','adminController@index');
@@ -72,7 +91,10 @@ Route::prefix('admin')->group(function () {
 
 });
 
+// end user and admin routing
+//____________________________________________________//
 
+// course and instructor Routing
 Route::get('api/courses', 'coursesAPIController@courses');
 Route::get('add', 'coursesController@addCourse');
 Route::post('add', 'coursesController@processAddCourse');
@@ -203,9 +225,7 @@ Route::post('courses/edit/{id}', 'courseController@updateCourseProcess');
 Route::get('courses/delete/{id}', 'courseController@deleteCourse');
 
 
-//__________________________________________//
-// Course Edit and Remove By M.sayed
-Route::get('courses/edit/{id}', 'courseController@updateCourse');
-Route::post('courses/edit/{id}', 'courseController@updateCourseProcess');
-Route::get('courses/delete/{id}', 'courseController@deleteCourse');
+// end  course and instructor Routing
+
+//---------------------------------//
 

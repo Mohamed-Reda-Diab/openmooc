@@ -35,7 +35,7 @@ class courseCategoryController extends Controller
 
     public function processAddCategory(Request $request)
     {
-        if ($this->coursesCategoryService->addCategory($request))
+        if ($this->coursesCategoryService->addCategory($request->all()))
             return 'course category Added';
 
         return $this->coursesCategoryService->errors();
@@ -104,7 +104,7 @@ class courseCategoryController extends Controller
 
     public function processupdateCategory(Request $request)
     {
-        if ($this->coursesCategoryService->updateCategory($request))
+        if ($this->coursesCategoryService->updateCategory($request->all()))
             return 'course category updated';
 
         return $this->coursesCategoryService->errors();
