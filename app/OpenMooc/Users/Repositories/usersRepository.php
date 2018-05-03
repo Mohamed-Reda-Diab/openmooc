@@ -14,13 +14,12 @@ class usersRepository extends Repository
         $user = new User();
         $user->username       = $userData['username'];
         $user->name           = $userData['name'];
-        $user->image          = $userData['image'];
         $user->email          = $userData['email'];
-        $user->password       = $userData['password'];
-        $user->user_group     = $userData['user_group'];
+        $user->password       = bcrypt($userData['password']);
+        $user->user_group     = isset($userData['user_group'])?$userData['user_group']:3;
         $user->about          = $userData['about'];
-        $user->is_active      = $userData['is_active'];
-        $user->remember_token = $userData['remember_token'];
+        $user->is_active      = isset($userData['is_active'])?$userData['is_active']:0;
+
         if ($user->save()) {
             return true;
         } else {

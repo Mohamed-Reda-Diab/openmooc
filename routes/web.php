@@ -21,7 +21,16 @@ Route::get('about',function (){
 
 Route::get('join/{id}','frontController@joinCoures');
 Route::get('course/{id}','frontController@getCoures');
-Route::get('instrutor/{id}','frontController@instructorDtalis');
+Route::get('instrutor/{id}','frontController@instructorDetails');
+
+// register
+Route::get('register','frontController@register');
+Route::post('register','frontController@prossRegister');
+//login
+Route::get('login','frontController@login');
+Route::post('login','frontController@prossLogin');
+Route::get('logout','frontController@logout');
+
 /*
  _________________end front view ____________
  */

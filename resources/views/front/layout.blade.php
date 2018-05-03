@@ -41,9 +41,13 @@
                     <li class="active"><a href="{{url('/')}}">Home</a></li>
                     <li><a href="{{url('about')}}">About</a></li>
                     <li><a href="contact.html">Contact</a></li>
-                    <li><a href="registration.html">Sign Up</a></li>
-                    <li><a href="login.html">Login</a></li>
-
+                    @if(\Auth::check())
+                        <li><a href="{{url('user/').Auth::user()->id}}">{{Auth::user()->name}}</a></li>
+                        <li><a href="{{url('logout')}}">logout</a></li>
+                     @else
+                        <li><a href="{{url('register')}}">Sign Up</a></li>
+                        <li><a href="{{url('login')}}">Login</a></li>
+                    @endif
                     <li><input type="text" placeholder=" Search" class="form-control search"></li>
                 </ul>
             </div>

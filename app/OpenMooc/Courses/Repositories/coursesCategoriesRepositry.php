@@ -67,9 +67,9 @@ class coursesCategoriesRepositry extends Repository
     {
         $user = DB::table('courses_categories')
             ->join('users', 'users.id', '=', 'courses_categories.created_by')
-            ->select('courses_categories.category_name', 'users.username', 'courses_categories.is_active')
+            ->select('courses_categories.category_name', 'courses_categories.category_id','users.username', 'courses_categories.is_active')
             ->where('courses_categories.category_id', '=', $id)
-            ->get();
+            ->first();
         return $user;
     }
 

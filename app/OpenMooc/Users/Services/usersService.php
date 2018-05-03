@@ -11,18 +11,15 @@ class usersService extends Service
     public function addUser($request)
     {
         $rules = [
-            'name'           => 'required|unique:users|min:3|max:20',
-            'username'       => 'required|unique:users|min:5|max:20',
+            'name'           => 'required|min:3|max:20',
+            'username'       => 'required|min:5|max:20',
             'password'       => 'required|min:6|max:20',
             'email'          => 'required|unique:users|email',
-            'image'          => 'required|image',
             'about'          => 'required|max:500',
-            'user_group'     => 'required|integer',
-            'is_active'      => 'required|boolean',
-            'remember_token' => 'required'
+
         ];
 
-        $validator = Validator::make($request->all(), $rules);
+        $validator = Validator::make($request, $rules);
 
         if($validator->fails())
         {
@@ -33,7 +30,7 @@ class usersService extends Service
        // $request->file('image')->store('uploads');
 
         $uRepository = new usersRepository();
-        if($uRepository->addUser($request->all())){
+        if($uRepository->addUser($request)){
             return true;
         }
     }
