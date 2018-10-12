@@ -11,7 +11,7 @@
             Add Course
         </header>
         <div class="panel-body">
-            <form  action="{{url('admin/courses')}}" method="post" enctype="multipart/form-data" role="form">
+            <form  action="{{url('admin/courses/add')}}" method="post" enctype="multipart/form-data" role="form">
                 <div class="form-group">
                     <label for="exampleInputEmail1">title</label>
                     <input type="text" name="title" class="form-control" id="exampleInputEmail1" placeholder="Enter course title">

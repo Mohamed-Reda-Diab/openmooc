@@ -39,13 +39,7 @@ class coursesRepository extends Repository
     // get course By Id
     public function getCourse($id)
     {
-        $courses = DB::table('courses')
-            ->leftJoin('courses_categories', 'courses.course_category', '=', 'courses_categories.category_id')
-            ->leftJoin('users', 'courses.course_instructor', '=', 'users.id')
-            ->select('courses.*','courses_categories.category_name','users.name')
-            ->where('courses.course_id','=',$id)
-            ->first();
-        return $courses;
+        return Courses::find($id);
     }
 
     // get courses By Category Id

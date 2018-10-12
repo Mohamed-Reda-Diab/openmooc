@@ -2,7 +2,7 @@
 
 @section('sidebar')
     @include('dashboard.admin.sidebar')
-@endsection
+  @endsection
 
 @section('content')
 <!--state overview start-->

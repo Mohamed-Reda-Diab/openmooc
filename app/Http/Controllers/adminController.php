@@ -25,7 +25,7 @@ class adminController extends Controller
         $sService = new coursesStudentsService();
         $subscribenum = $sService->subscribenum();
 
-        return view('dashboard.admin.index')->with('usernum',$usernum)
+        return view('welcome')->with('usernum',$usernum)
                                             ->with('categoriesnum',$categoriesnum)
                                             ->with('coursesnum',$coursesnum)
                                             ->with('subscribenum',$subscribenum);
